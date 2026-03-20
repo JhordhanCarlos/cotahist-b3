@@ -23,9 +23,9 @@ export default async function Home() {
               {datpre ? `Pregão de ${formatDate(datpre)}` : 'Nenhum dado disponível'}
             </p>
           </div>
-          <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50">
+          {/* <Badge variant="outline" className="text-amber-700 border-amber-300 bg-amber-50">
             HOMOLOG
-          </Badge>
+          </Badge> */}
         </div>
       </header>
 
