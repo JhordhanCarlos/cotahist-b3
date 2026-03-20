@@ -1,0 +1,128 @@
+{
+  "id": "dbf62979-88a8-42dc-a46c-6505b3d914dc",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.cotacoes": {
+      "name": "cotacoes",
+      "schema": "",
+      "columns": {
+        "ticker": {
+          "name": "ticker",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "datpre": {
+          "name": "datpre",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "codbdi": {
+          "name": "codbdi",
+          "type": "varchar(2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tpmerc": {
+          "name": "tpmerc",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "especi": {
+          "name": "especi",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "preabe": {
+          "name": "preabe",
+          "type": "numeric(13, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "premax": {
+          "name": "premax",
+          "type": "numeric(13, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "premin": {
+          "name": "premin",
+          "type": "numeric(13, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "premed": {
+          "name": "premed",
+          "type": "numeric(13, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "preult": {
+          "name": "preult",
+          "type": "numeric(13, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "preofc": {
+          "name": "preofc",
+          "type": "numeric(13, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "preofv": {
+          "name": "preofv",
+          "type": "numeric(13, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "totneg": {
+          "name": "totneg",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quatot": {
+          "name": "quatot",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voltot": {
+          "name": "voltot",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

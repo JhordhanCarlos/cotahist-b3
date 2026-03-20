@@ -1,15 +1,17 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Cotacao } from '@/lib/cotahist-parser'
+import { CotacaoRow } from '@/db/schema'
 import { formatBRL, calcVariacao } from '@/lib/formatters'
 import { VariacaoBadge } from './variacao-badge'
 
 interface CotacaoCardProps {
-  cotacao: Cotacao
+  cotacao: CotacaoRow
 }
 
 export function CotacaoCard({ cotacao }: CotacaoCardProps) {
-  const variacao = calcVariacao(cotacao.preult, cotacao.preabe)
+  const preult = parseFloat(cotacao.preult)
+  const preabe = parseFloat(cotacao.preabe)
+  const variacao = calcVariacao(preult, preabe)
 
   return (
     <Card>
@@ -31,7 +33,7 @@ export function CotacaoCard({ cotacao }: CotacaoCardProps) {
             Fechamento
           </p>
           <p className="text-3xl font-bold tabular-nums tracking-tight">
-            {formatBRL(cotacao.preult)}
+            {formatBRL(preult)}
           </p>
         </div>
 
@@ -39,9 +41,9 @@ export function CotacaoCard({ cotacao }: CotacaoCardProps) {
 
         <div className="grid grid-cols-3 gap-2">
           {[
-            { label: 'Abertura', value: cotacao.preabe },
-            { label: 'Máxima',   value: cotacao.premax },
-            { label: 'Mínima',   value: cotacao.premin },
+            { label: 'Abertura', value: parseFloat(cotacao.preabe) },
+            { label: 'Máxima',   value: parseFloat(cotacao.premax) },
+            { label: 'Mínima',   value: parseFloat(cotacao.premin) },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-0.5">
