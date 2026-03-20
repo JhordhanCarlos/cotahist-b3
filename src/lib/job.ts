@@ -1,7 +1,7 @@
 import AdmZip from 'adm-zip'
 import { Cotacao, parseArquivo } from './cotahist-parser'
-const url = process.env.DATABASE_URL_HOMOLOG
-if (!url) throw new Error('DATABASE_URL_HOMOLOG não definida no .env.local')
+const url = process.env.DATABASE_URL
+if (!url) throw new Error('DATABASE_URL não definida')
 
 import { neon } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'
