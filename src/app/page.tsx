@@ -1,10 +1,16 @@
 import { Badge } from '@/components/ui/badge'
-import { CotacaoCard } from '@/app/components/cotacoes/cotacao-card'
+import { CotacoesList } from '@/app/components/cotacoes/cotacoes-list'
 import { getCotacoes } from '@/db/queries'
 import { formatDate } from '@/lib/formatters'
 
+function isWeekend() {
+  const day = new Date().getDay()
+  return day === 0 || day === 6
+}
+
 export default async function Home() {
-  const cotacoes = await getCotacoes()
+  const weekend = isWeekend()
+  const cotacoes = weekend ? [] : await getCotacoes()
   const datpre = cotacoes[0]?.datpre ?? null
 
   return (
@@ -23,11 +29,20 @@ export default async function Home() {
         </div>
       </header>
 
-      <section className="max-w-5xl mx-auto px-6 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {cotacoes.map((c) => (
-          <CotacaoCard key={c.ticker} cotacao={c} />
-        ))}
-      </section>
+      {weekend ? (
+        <div className="max-w-5xl mx-auto px-6 py-24 flex flex-col items-center gap-3 text-center">
+          <p className="text-4xl">🏖️</p>
+          <h2 className="text-lg font-semibold">Mercado fechado</h2>
+          <p className="text-sm text-muted-foreground">
+            A B3 não opera aos finais de semana. <br />
+            As cotações voltam na segunda-feira.
+          </p>
+        </div>
+      ) : (
+        <section className="max-w-5xl mx-auto px-6 py-8">
+          <CotacoesList cotacoes={cotacoes} />
+        </section>
+      )}
     </main>
   )
 }

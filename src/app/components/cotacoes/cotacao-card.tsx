@@ -14,7 +14,7 @@ export function CotacaoCard({ cotacao }: CotacaoCardProps) {
   const variacao = calcVariacao(preult, preabe)
 
   return (
-    <Card>
+    <Card className="transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div>
