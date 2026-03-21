@@ -12,6 +12,7 @@ const db = drizzle(neon(url), { schema })
 
 function generateUrl() {
     const today = new Date()
+    today.setDate(today.getDate() - 1)
     const day = String(today.getDate()).padStart(2, '0')
     const month = today.getUTCMonth().toString().length === 1 ? `0${today.getUTCMonth() + 1}` : today.getUTCMonth() + 1
     const year = today.getUTCFullYear()
