@@ -20,6 +20,13 @@ Every trading day, after market close, a cron job automatically:
 
 Users get a fast, clean snapshot of the day's trading data — open, close, high, low, volume, and variation — searchable by ticker or company name, with a click-through modal for full detail.
 
+<img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/7b3687ee-7723-421b-8da5-891f6828c169" />
+
+<img width="1919" height="870" alt="image" src="https://github.com/user-attachments/assets/5796ccaa-4943-417a-8e1c-449f707c2dea" />
+
+<img width="1913" height="865" alt="image" src="https://github.com/user-attachments/assets/c199876c-8e55-4d2e-932b-477a44907511" />
+
+
 ---
 
 ## Stack
