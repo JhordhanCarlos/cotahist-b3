@@ -1,0 +1,38 @@
+name: Daily COTAHIST job
+
+# Dispara o job diário chamando o endpoint /api/cron de produção.
+# Substitui o Vercel Cron (que no plano Hobby só garante o disparo dentro da
+# hora agendada). Aqui o horário é confiável e há um botão de execução manual.
+
+on:
+  schedule:
+    # 11:00 UTC = 08:00 BRT — dias úteis (seg–sex).
+    # Nota: o agendador do GitHub Actions pode atrasar alguns minutos em picos.
+    - cron: '0 11 * * 1-5'
+  workflow_dispatch: {} # botão "Run workflow" na aba Actions — roda sob demanda
+
+# Evita execuções sobrepostas se um disparo manual coincidir com o agendado.
+concurrency:
+  group: daily-cotahist-job
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chamar endpoint de produção
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          APP_URL: https://cotahist-b3.vercel.app
+        run: |
+          code=$(curl -sS --max-time 300 -o /tmp/body.txt -w '%{http_code}' \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${APP_URL}/api/cron")
+          echo "HTTP ${code}"
+          echo "Resposta:"
+          cat /tmp/body.txt || true
+          echo
+          if [ "${code}" != "200" ]; then
+            echo "::error::/api/cron respondeu ${code} (esperado 200)"
+            exit 1
+          fi

@@ -1,23 +1,29 @@
 import AdmZip from 'adm-zip'
 import { Cotacao, parseArquivo } from './cotahist-parser'
-const url = process.env.DATABASE_URL
-if (!url) throw new Error('DATABASE_URL não definida')
+import { truncateAndInsert } from '@/db/queries'
 
-import { neon } from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-http'
-import * as schema from '@/db/schema'
-import { truncateAndInsert } from 'src/db/queries'
-const db = drizzle(neon(url), { schema })
+/**
+ * Retorna o pregão anterior à data de referência, pulando o fim de semana.
+ * Ex.: numa segunda-feira retorna a sexta anterior.
+ * (Feriados da B3 não são tratados — nesses dias o arquivo não existe e o
+ * download falha com 404, sem alterar a base.)
+ */
+function previousTradingDay(reference: Date): Date {
+    const d = new Date(reference)
+    do {
+        d.setUTCDate(d.getUTCDate() - 1)
+    } while (d.getUTCDay() === 0 || d.getUTCDay() === 6)
+    return d
+}
 
-
-function generateUrl() {
-    const today = new Date()
-    today.setDate(today.getDate() - 1)
-    const day = String(today.getDate()).padStart(2, '0')
-    const month = today.getUTCMonth().toString().length === 1 ? `0${today.getUTCMonth() + 1}` : today.getUTCMonth() + 1
-    const year = today.getUTCFullYear()
-    const formattedDate = `${day}${month}${year}`
-    return `https://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_D${formattedDate}.ZIP`
+function generateUrl(reference: Date = new Date()): string {
+    // O job roda de manhã (08h BRT / 11h UTC), então a data UTC coincide com a
+    // data no Brasil e podemos formatar direto em UTC.
+    const target = previousTradingDay(reference)
+    const day = String(target.getUTCDate()).padStart(2, '0')
+    const month = String(target.getUTCMonth() + 1).padStart(2, '0')
+    const year = target.getUTCFullYear()
+    return `https://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_D${day}${month}${year}.ZIP`
 }
 
 async function downloadFile(url: string) {
@@ -56,14 +62,21 @@ async function insertRowsOnDB(cotacoes: Cotacao[]) {
         voltot: c.voltot.toString(),
     }))
 
-    truncateAndInsert(rows)
+    await truncateAndInsert(rows)
 }
 
 export async function runDailyJob() {
     const url = generateUrl()
     const file = await downloadFile(url)
     const cotacoes: Cotacao[] = transformFileIntoArray(file)
+
+    // Não zera a base se o arquivo veio sem cotações válidas (formato inesperado):
+    // preserva os dados do último pregão em vez de deixar a página vazia.
+    if (cotacoes.length === 0) {
+        throw new Error('Nenhuma cotação válida encontrada no arquivo — base preservada')
+    }
+
     await insertRowsOnDB(cotacoes)
 
-    return { success: true, message: 'Cotações inseridas com sucesso' }
+    return { success: true, message: `${cotacoes.length} cotações inseridas com sucesso` }
 }

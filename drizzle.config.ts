@@ -10,7 +10,6 @@ export default {
   out: './src/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url : url,
+    url: url,
   },
 } satisfies Config
- 
